@@ -1,7 +1,7 @@
 # This file originally from pip:
 # https://github.com/pypa/pip/blob/8f4f15a5a95d7d5b511ceaee9ed261176c181970/src/pip/_internal/pep425tags.py
 """Generate and work with PEP 425 Compatibility Tags."""
-
+from __future__ import absolute_import
 
 import distutils.util
 from distutils import log
@@ -272,7 +272,7 @@ def get_supported(versions=None, noarch=False, platform=None,
                 name, major, minor, actual_arch = match.groups()
                 tpl = '{}_{}_%i_%s'.format(name, major)
                 arches = []
-                for m in reversed(list(range(int(minor) + 1))):
+                for m in reversed(range(int(minor) + 1)):
                     for a in get_darwin_arches(int(major), m, actual_arch):
                         arches.append(tpl % (m, a))
             else:

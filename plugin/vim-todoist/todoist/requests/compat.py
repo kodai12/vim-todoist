@@ -38,20 +38,20 @@ if is_py2:
     from urllib import (
         quote, unquote, quote_plus, unquote_plus, urlencode, getproxies,
         proxy_bypass, proxy_bypass_environment, getproxies_environment)
-    from urllib.parse import urlparse, urlunparse, urljoin, urlsplit, urldefrag
+    from urlparse import urlparse, urlunparse, urljoin, urlsplit, urldefrag
     from urllib2 import parse_http_list
-    import http.cookiejar
-    from http.cookies import Morsel
-    from io import StringIO
+    import cookielib
+    from Cookie import Morsel
+    from StringIO import StringIO
     from collections import Callable, Mapping, MutableMapping, OrderedDict
 
 
     builtin_str = str
     bytes = str
-    str = str
-    str = str
-    numeric_types = (int, int, float)
-    integer_types = (int, int)
+    str = unicode
+    basestring = basestring
+    numeric_types = (int, long, float)
+    integer_types = (int, long)
 
 elif is_py3:
     from urllib.parse import urlparse, urlunparse, urljoin, urlsplit, urlencode, quote, unquote, quote_plus, unquote_plus, urldefrag
@@ -65,6 +65,6 @@ elif is_py3:
     builtin_str = str
     str = str
     bytes = bytes
-    str = (str, bytes)
+    basestring = (str, bytes)
     numeric_types = (int, float)
     integer_types = (int,)

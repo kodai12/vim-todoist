@@ -24,7 +24,7 @@ classImplements(Exception, IException)
 class IStandardError(IException):
     "Interface for `StandardError` (Python 2 only.)"
 try:
-    classImplements(Exception, IStandardError)
+    classImplements(StandardError, IStandardError)
 except NameError:  #pragma NO COVER
     pass # StandardError does not exist in Python 3
 

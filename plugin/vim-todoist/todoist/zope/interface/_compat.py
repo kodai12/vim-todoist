@@ -19,12 +19,12 @@ import types
 if sys.version_info[0] < 3:
 
     def _normalize_name(name):
-        if isinstance(name, str):
-            return str(name)
+        if isinstance(name, basestring):
+            return unicode(name)
         raise TypeError("name must be a regular or unicode string")
 
-    CLASS_TYPES = (type, type)
-    STRING_TYPES = (str,)
+    CLASS_TYPES = (type, types.ClassType)
+    STRING_TYPES = (basestring,)
 
     _BUILTINS = '__builtin__'
 

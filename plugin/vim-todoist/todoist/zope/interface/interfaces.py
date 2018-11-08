@@ -20,7 +20,7 @@ from zope.interface.interface import Interface
 from zope.interface.declarations import implementer
 
 
-_BLANK = ''
+_BLANK = u''
 
 class IElement(Interface):
     """Objects that have basic documentation and tagged values.

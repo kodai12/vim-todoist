@@ -241,7 +241,7 @@ class easy_install(Command):
         ver = sys.version[:3]
         dist = get_distribution('setuptools')
         tmpl = 'setuptools {dist.version} from {dist.location} (Python {ver})'
-        print((tmpl.format(**locals())))
+        print(tmpl.format(**locals()))
         raise SystemExit()
 
     def finalize_options(self):
@@ -304,7 +304,7 @@ class easy_install(Command):
         self.set_undefined_options('install', ('record', 'record'))
         # Should this be moved to the if statement below? It's not used
         # elsewhere
-        normpath = list(map(normalize_path, sys.path))
+        normpath = map(normalize_path, sys.path)
         self.all_site_dirs = get_site_dirs()
         if self.site_dirs is not None:
             site_dirs = [
@@ -478,7 +478,7 @@ class easy_install(Command):
         else:
             self.pth_file = None
 
-        if instdir not in list(map(normalize_path, _pythonpath())):
+        if instdir not in map(normalize_path, _pythonpath()):
             # only PYTHONPATH dirs need a site.py, so pretend it's there
             self.sitepy_installed = True
         elif self.multi_version and not os.path.exists(pth_file):
@@ -632,7 +632,7 @@ class easy_install(Command):
 
     @contextlib.contextmanager
     def _tmpdir(self):
-        tmpdir = tempfile.mkdtemp(prefix="easy_install-")
+        tmpdir = tempfile.mkdtemp(prefix=u"easy_install-")
         try:
             # cast to str as workaround for #709 and #710 and #712
             yield str(tmpdir)
@@ -1097,7 +1097,7 @@ class easy_install(Command):
         msg = "\n%(what)s %(eggloc)s%(extras)s"
         if self.multi_version and not self.no_report:
             msg += '\n' + self.__mv_warning
-            if self.install_dir not in list(map(normalize_path, sys.path)):
+            if self.install_dir not in map(normalize_path, sys.path):
                 msg += '\n' + self.__id_warning
 
         eggloc = dist.location
@@ -1181,7 +1181,7 @@ class easy_install(Command):
             'site_dirs', 'allow_hosts',
         )
         fetch_options = {}
-        for key, val in list(ei_opts.items()):
+        for key, val in ei_opts.items():
             if key not in fetch_directives:
                 continue
             fetch_options[key.replace('_', '-')] = val[1]
@@ -1367,7 +1367,7 @@ class easy_install(Command):
             config_vars = config_vars.copy()
             config_vars['base'] = self.prefix
             scheme = self.INSTALL_SCHEMES.get(os.name, self.DEFAULT_SCHEME)
-            for attr, val in list(scheme.items()):
+            for attr, val in scheme.items():
                 if getattr(self, attr, None) is None:
                     setattr(self, attr, val)
 
@@ -1384,7 +1384,7 @@ class easy_install(Command):
 
 def _pythonpath():
     items = os.environ.get('PYTHONPATH', '').split(os.pathsep)
-    return [_f for _f in items if _f]
+    return filter(None, items)
 
 
 def get_site_dirs():
@@ -2101,7 +2101,7 @@ class ScriptWriter:
         spec = str(dist.as_requirement())
         for type_ in 'console', 'gui':
             group = type_ + '_scripts'
-            for name, ep in list(dist.get_entry_map(group).items()):
+            for name, ep in dist.get_entry_map(group).items():
                 cls._ensure_safe_name(name)
                 script_text = cls.template % locals()
                 args = cls._get_script_args(type_, name, header, script_text)

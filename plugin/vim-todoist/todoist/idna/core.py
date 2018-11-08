@@ -7,11 +7,11 @@ from .intranges import intranges_contain
 
 _virama_combining_class = 9
 _alabel_prefix = b'xn--'
-_unicode_dots_re = re.compile('[\u002e\u3002\uff0e\uff61]')
+_unicode_dots_re = re.compile(u'[\u002e\u3002\uff0e\uff61]')
 
 if sys.version_info[0] == 3:
-    str = str
-    chr = chr
+    unicode = str
+    unichr = chr
 
 class IDNAError(UnicodeError):
     """ Base exception for all IDNA-encoding related problems """
@@ -34,9 +34,9 @@ class InvalidCodepointContext(IDNAError):
 
 
 def _combining_class(cp):
-    v = unicodedata.combining(chr(cp))
+    v = unicodedata.combining(unichr(cp))
     if v == 0:
-        if not unicodedata.name(chr(cp)):
+        if not unicodedata.name(unichr(cp)):
             raise ValueError("Unknown character in unicodedata")
     return v
 
@@ -212,7 +212,7 @@ def valid_contexto(label, pos, exception=False):
 
     elif cp_value == 0x30fb:
         for cp in label:
-            if cp == '\u30fb':
+            if cp == u'\u30fb':
                 continue
             if _is_script(cp, 'Hiragana') or _is_script(cp, 'Katakana') or _is_script(cp, 'Han'):
                 return True
@@ -280,7 +280,7 @@ def alabel(label):
     if not label:
         raise IDNAError('No Input')
 
-    label = str(label)
+    label = unicode(label)
     check_label(label)
     label = _punycode(label)
     label = _alabel_prefix + label
@@ -315,7 +315,7 @@ def ulabel(label):
 def uts46_remap(domain, std3_rules=True, transitional=False):
     """Re-map the characters in the string according to UTS46 processing."""
     from .uts46data import uts46data
-    output = ""
+    output = u""
     try:
         for pos, char in enumerate(domain):
             code_point = ord(char)
@@ -382,7 +382,7 @@ def decode(s, strict=False, uts46=False, std3_rules=False):
     if not strict:
         labels = _unicode_dots_re.split(s)
     else:
-        labels = s.split('.')
+        labels = s.split(u'.')
     if not labels or labels == ['']:
         raise IDNAError('Empty domain')
     if not labels[-1]:
@@ -395,5 +395,5 @@ def decode(s, strict=False, uts46=False, std3_rules=False):
         else:
             raise IDNAError('Empty label')
     if trailing_dot:
-        result.append('')
-    return '.'.join(result)
+        result.append(u'')
+    return u'.'.join(result)
