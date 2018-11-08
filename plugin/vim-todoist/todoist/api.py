@@ -268,7 +268,7 @@ class TodoistAPI(object):
         }
         response = self._post('sync', data=post_data)
         if 'temp_id_mapping' in response:
-            for temp_id, new_id in list(response['temp_id_mapping'].items()):
+            for temp_id, new_id in response['temp_id_mapping'].items():
                 self.temp_ids[temp_id] = new_id
                 self._replace_temp_id(temp_id, new_id)
         self._update_state(response)
@@ -287,7 +287,7 @@ class TodoistAPI(object):
         del self.queue[:]
         if 'sync_status' in ret:
             if raise_on_error:
-                for k, v in list(ret['sync_status'].items()):
+                for k, v in ret['sync_status'].items():
                     if v != 'ok':
                         raise SyncError(k, v)
         return ret
