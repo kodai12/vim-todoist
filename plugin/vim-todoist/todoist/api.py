@@ -1,7 +1,7 @@
 from . import uuid
 import json
 from . import requests
-from . import datetime
+import datetime
 from functools import partial
 
 from todoist import models
