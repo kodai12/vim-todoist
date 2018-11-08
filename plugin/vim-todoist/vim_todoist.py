@@ -7,7 +7,7 @@ def get_tasks():
         print("===== Tasks To Do =====")
 
         for task in sync['items']:
-            print("-> {}".format(task['content'].encode('utf-8')))
+            print("-> {}".format(task['content']))
 
         print("=======================")
 
@@ -20,7 +20,7 @@ def get_completed_tasks():
 
         print("===== Completed Tasks =====")
         for task in tasks['items']:
-            print("[{}] -> {}".format(task['completed_date'], task['content'].encode('utf-8')))
+            print("[{}] -> {}".format(task['completed_date'], task['content']))
 
         print("===========================")
 
