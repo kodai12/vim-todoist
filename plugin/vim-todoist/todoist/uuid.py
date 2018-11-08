@@ -125,11 +125,11 @@ class UUID(object):
             hex = hex.strip('{}').replace('-', '')
             if len(hex) != 32:
                 raise ValueError('badly formed hexadecimal UUID string')
-            int = int(hex, 16)
+            int = long(hex, 16)
         if bytes is not None:
             if len(bytes) != 16:
                 raise ValueError('bytes is not a 16-char string')
-            int = int(('%02x'*16) % tuple(map(ord, bytes)), 16)
+            int = long(('%02x'*16) % tuple(map(ord, bytes)), 16)
         if fields is not None:
             if len(fields) != 6:
                 raise ValueError('fields is not a 6-tuple')
