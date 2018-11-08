@@ -4,12 +4,12 @@ import vim
 def get_tasks():
     sync = get_sync()
     if sync:
-        print "===== Tasks To Do ====="
+        print("===== Tasks To Do =====")
 
         for task in sync['items']:
             print "-> {}".format(task['content'].encode('utf-8'))
 
-        print "======================="
+        print("=======================")
 
 
 def get_completed_tasks():
@@ -18,23 +18,23 @@ def get_completed_tasks():
     if api:
         tasks = api.get_all_completed_items()
 
-        print "===== Completed Tasks ====="
+        print("===== Completed Tasks =====")
         for task in tasks['items']:
             print "[{}] -> {}".format(task['completed_date'], task['content'].encode('utf-8'))
 
-        print "==========================="
-        
+        print("===========================")
+
 
 def get_projects():
 
     sync = get_sync()
     if sync:
-        print "===== My Projects ====="
+        print("===== My Projects =====")
 
         for project in sync['projects']:
             print "-> {}".format(project['name'])
 
-        print "======================="
+        print("=======================")
 
 def get_api():
     token_exists = int(vim.eval('exists("g:todoist_token")'))
