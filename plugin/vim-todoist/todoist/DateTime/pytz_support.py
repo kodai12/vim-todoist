@@ -11,7 +11,7 @@
 #
 ##############################################################################
 
-from datetime import datetime, timedelta
+from .datetime import datetime, timedelta
 
 import pytz
 import pytz.reference
@@ -205,7 +205,7 @@ def _static_timezone_factory(data):
     return cls()
 
 _numeric_timezones = dict((key, _static_timezone_factory(data))
-                          for key, data in _numeric_timezone_data.items())
+                          for key, data in list(_numeric_timezone_data.items()))
 
 
 class Timezone:
@@ -246,7 +246,7 @@ class PytzCache:
     _zlst = pytz.common_timezones + _old_zlst  # used by DateTime.TimeZones
     _zmap = dict((name.lower(), name) for name in pytz.all_timezones)
     _zmap.update(_old_zmap)  # These must take priority
-    _zidx = _zmap.keys()
+    _zidx = list(_zmap.keys())
 
     def __getitem__(self, key):
         name = self._zmap.get(key.lower(), key)  # fallback to key

@@ -85,7 +85,7 @@ def write_pkg_file(self, file):
     file.write('License: %s\n' % self.get_license())
     if self.download_url:
         file.write('Download-URL: %s\n' % self.download_url)
-    for project_url in self.project_urls.items():
+    for project_url in list(self.project_urls.items()):
         file.write('Project-URL: %s, %s\n' % project_url)
 
     long_desc = rfc822_escape(self.get_long_description())
@@ -168,7 +168,7 @@ def check_nsp(dist, attr, value):
 def check_extras(dist, attr, value):
     """Verify that extras_require mapping is valid"""
     try:
-        list(itertools.starmap(_check_extra, value.items()))
+        list(itertools.starmap(_check_extra, list(value.items())))
     except (TypeError, ValueError, AttributeError):
         raise DistutilsSetupError(
             "'extras_require' must be a dictionary whose values are "
@@ -233,7 +233,7 @@ def check_test_suite(dist, attr, value):
 def check_package_data(dist, attr, value):
     """Verify that value is a dictionary of package names to glob lists"""
     if isinstance(value, dict):
-        for k, v in value.items():
+        for k, v in list(value.items()):
             if not isinstance(k, str):
                 break
             try:
@@ -367,14 +367,14 @@ class Distribution(Distribution_parse_config_files, _Distribution):
         for ep in pkg_resources.iter_entry_points('distutils.setup_keywords'):
             vars(self).setdefault(ep.name, None)
         _Distribution.__init__(self, {
-            k: v for k, v in attrs.items()
+            k: v for k, v in list(attrs.items())
             if k not in self._DISTUTILS_UNSUPPORTED_METADATA
         })
 
         # Fill-in missing metadata fields not supported by distutils.
         # Note some fields may have been set by other tools (e.g. pbr)
         # above; they are taken preferrentially to setup() arguments
-        for option, default in self._DISTUTILS_UNSUPPORTED_METADATA.items():
+        for option, default in list(self._DISTUTILS_UNSUPPORTED_METADATA.items()):
             for source in self.metadata.__dict__, attrs:
                 if option in source:
                     value = source[option]
@@ -417,7 +417,7 @@ class Distribution(Distribution_parse_config_files, _Distribution):
             self.metadata.python_requires = self.python_requires
 
         if getattr(self, 'extras_require', None):
-            for extra in self.extras_require.keys():
+            for extra in list(self.extras_require.keys()):
                 # Since this gets called multiple times at points where the
                 # keys have become 'converted' extras, ensure that we are only
                 # truly adding extras we haven't seen before here.
@@ -436,7 +436,7 @@ class Distribution(Distribution_parse_config_files, _Distribution):
         """
         spec_ext_reqs = getattr(self, 'extras_require', None) or {}
         self._tmp_extras_require = defaultdict(list)
-        for section, v in spec_ext_reqs.items():
+        for section, v in list(spec_ext_reqs.items()):
             # Do not strip empty sections.
             self._tmp_extras_require[section]
             for r in pkg_resources.parse_requirements(v):
@@ -466,7 +466,7 @@ class Distribution(Distribution_parse_config_files, _Distribution):
 
         spec_inst_reqs = getattr(self, 'install_requires', None) or ()
         inst_reqs = list(pkg_resources.parse_requirements(spec_inst_reqs))
-        simple_reqs = filter(is_simple_req, inst_reqs)
+        simple_reqs = list(filter(is_simple_req, inst_reqs))
         complex_reqs = filterfalse(is_simple_req, inst_reqs)
         self.install_requires = list(map(str, simple_reqs))
 
@@ -474,7 +474,7 @@ class Distribution(Distribution_parse_config_files, _Distribution):
             self._tmp_extras_require[':' + str(r.marker)].append(r)
         self.extras_require = dict(
             (k, [str(r) for r in map(self._clean_req, v)])
-            for k, v in self._tmp_extras_require.items()
+            for k, v in list(self._tmp_extras_require.items())
         )
 
     def _clean_req(self, req):
@@ -559,7 +559,7 @@ class Distribution(Distribution_parse_config_files, _Distribution):
         opts.clear()
         opts.update(
             (k, v)
-            for k, v in self.get_option_dict('easy_install').items()
+            for k, v in list(self.get_option_dict('easy_install').items())
             if k in (
                 # don't use any other settings
                 'find_links', 'site_dirs', 'index_url',
@@ -586,7 +586,7 @@ class Distribution(Distribution_parse_config_files, _Distribution):
         go = []
         no = self.negative_opt.copy()
 
-        for name, feature in self.features.items():
+        for name, feature in list(self.features.items()):
             self._set_feature(name, None)
             feature.validate(self)
 
@@ -611,7 +611,7 @@ class Distribution(Distribution_parse_config_files, _Distribution):
         """Add/remove features and resolve dependencies between them"""
 
         # First, flag all the enabled items (and thus their dependencies)
-        for name, feature in self.features.items():
+        for name, feature in list(self.features.items()):
             enabled = self.feature_is_included(name)
             if enabled or (enabled is None and feature.include_by_default()):
                 feature.include_in(self)
@@ -619,7 +619,7 @@ class Distribution(Distribution_parse_config_files, _Distribution):
 
         # Then disable the rest, so that off-by-default features don't
         # get flagged as errors when they're required by an enabled feature
-        for name, feature in self.features.items():
+        for name, feature in list(self.features.items()):
             if not self.feature_is_included(name):
                 feature.exclude_from(self)
                 self._set_feature(name, 0)
@@ -687,7 +687,7 @@ class Distribution(Distribution_parse_config_files, _Distribution):
         will try to call 'dist._include_foo({"bar":"baz"})', which can then
         handle whatever special inclusion logic is needed.
         """
-        for k, v in attrs.items():
+        for k, v in list(attrs.items()):
             include = getattr(self, '_include_' + k, None)
             if include:
                 include(v)
@@ -783,7 +783,7 @@ class Distribution(Distribution_parse_config_files, _Distribution):
         will try to call 'dist._exclude_foo({"bar":"baz"})', which can then
         handle whatever special exclusion logic is needed.
         """
-        for k, v in attrs.items():
+        for k, v in list(attrs.items()):
             exclude = getattr(self, '_exclude_' + k, None)
             if exclude:
                 exclude(v)
@@ -835,9 +835,9 @@ class Distribution(Distribution_parse_config_files, _Distribution):
 
         d = {}
 
-        for cmd, opts in self.command_options.items():
+        for cmd, opts in list(self.command_options.items()):
 
-            for opt, (src, val) in opts.items():
+            for opt, (src, val) in list(opts.items()):
 
                 if src != "command line":
                     continue
@@ -848,7 +848,7 @@ class Distribution(Distribution_parse_config_files, _Distribution):
                     cmdobj = self.get_command_obj(cmd)
                     neg_opt = self.negative_opt.copy()
                     neg_opt.update(getattr(cmdobj, 'negative_opt', {}))
-                    for neg, pos in neg_opt.items():
+                    for neg, pos in list(neg_opt.items()):
                         if pos == opt:
                             opt = neg
                             val = None

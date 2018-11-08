@@ -56,7 +56,7 @@ class Distribution_parse_config_files:
         # to set Distribution options.
 
         if 'global' in self.command_options:
-            for (opt, (src, val)) in self.command_options['global'].items():
+            for (opt, (src, val)) in list(self.command_options['global'].items()):
                 alias = self.negative_opt.get(opt)
                 try:
                     if alias:

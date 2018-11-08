@@ -100,7 +100,7 @@ class MetaClass(object):
 
 MetaClass = MetaMetaClass('MetaClass',
                           MetaClass.__bases__,
-                          {k: v for k, v in MetaClass.__dict__.items()
+                          {k: v for k, v in list(MetaClass.__dict__.items())
                           if k not in ('__dict__',)})
 
 class OddInstance(object):

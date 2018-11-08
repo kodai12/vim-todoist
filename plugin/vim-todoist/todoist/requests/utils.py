@@ -27,7 +27,7 @@ from ._internal_utils import to_native_string
 from .compat import parse_http_list as _parse_list_header
 from .compat import (
     quote, urlparse, bytes, str, OrderedDict, unquote, getproxies,
-    proxy_bypass, urlunparse, basestring, integer_types, is_py3,
+    proxy_bypass, urlunparse, str, integer_types, is_py3,
     proxy_bypass_environment, getproxies_environment, Mapping)
 from .cookies import cookiejar_from_dict
 from .structures import CaseInsensitiveDict
@@ -47,7 +47,7 @@ if sys.platform == 'win32':
             if is_py3:
                 import winreg
             else:
-                import _winreg as winreg
+                import winreg as winreg
         except ImportError:
             return False
 
@@ -97,7 +97,7 @@ def dict_to_sequence(d):
     """Returns an internal sequence dictionary update."""
 
     if hasattr(d, 'items'):
-        d = d.items()
+        d = list(d.items())
 
     return d
 
@@ -217,7 +217,7 @@ def get_netrc_auth(url, raise_errors=False):
 def guess_filename(obj):
     """Tries to guess the filename of the given object."""
     name = getattr(obj, 'name', None)
-    if (name and isinstance(name, basestring) and name[0] != '<' and
+    if (name and isinstance(name, str) and name[0] != '<' and
             name[-1] != '>'):
         return os.path.basename(name)
 
@@ -301,7 +301,7 @@ def to_key_val_list(value):
         raise ValueError('cannot encode objects that are not 2-tuples')
 
     if isinstance(value, Mapping):
-        value = value.items()
+        value = list(value.items())
 
     return list(value)
 

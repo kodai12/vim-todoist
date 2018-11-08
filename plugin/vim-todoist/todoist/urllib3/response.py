@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+
 from contextlib import contextmanager
 import zlib
 import io
@@ -11,7 +11,7 @@ from .exceptions import (
     BodyNotHttplibCompatible, ProtocolError, DecodeError, ReadTimeoutError,
     ResponseNotChunked, IncompleteRead, InvalidHeader
 )
-from .packages.six import string_types as basestring, PY3
+from .packages.six import string_types as str, PY3
 from .packages.six.moves import http_client as httplib
 from .connection import HTTPException, BaseSSLError
 from .util.response import is_fp_closed, is_response_to_head
@@ -183,7 +183,7 @@ class HTTPResponse(io.IOBase):
         self.msg = msg
         self._request_url = request_url
 
-        if body and isinstance(body, (basestring, bytes)):
+        if body and isinstance(body, (str, bytes)):
             self._body = body
 
         self._pool = pool
@@ -509,7 +509,7 @@ class HTTPResponse(io.IOBase):
 
         if not isinstance(headers, HTTPHeaderDict):
             if PY3:  # Python 3
-                headers = HTTPHeaderDict(headers.items())
+                headers = HTTPHeaderDict(list(headers.items()))
             else:  # Python 2
                 headers = HTTPHeaderDict.from_httplib(headers)
 

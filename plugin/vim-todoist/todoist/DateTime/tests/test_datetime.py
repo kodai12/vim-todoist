@@ -27,10 +27,10 @@ from DateTime import DateTime
 
 if sys.version_info > (3, ):
     import pickle
-    unicode = str
+    str = str
     PY3K = True
 else:
-    import cPickle as pickle
+    import pickle as pickle
     PY3K = False
 
 try:
@@ -127,7 +127,7 @@ class DateTimeTests(unittest.TestCase):
         dt = DateTime()
         dt1 = DateTime(float(dt), dt.timezone())
         self.assertEqual(str(dt), str(dt1), (dt, dt1))
-        dt1 = DateTime(float(dt), unicode(dt.timezone()))
+        dt1 = DateTime(float(dt), str(dt.timezone()))
         self.assertEqual(str(dt), str(dt1), (dt, dt1))
 
     def testConstructor6(self):

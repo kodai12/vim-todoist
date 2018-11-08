@@ -24,7 +24,7 @@ from zope.interface.interfaces import IAdapterRegistry
 from zope.interface._compat import _normalize_name
 from zope.interface._compat import STRING_TYPES
 
-_BLANK = u''
+_BLANK = ''
 
 class BaseAdapterRegistry(object):
 
@@ -460,7 +460,7 @@ class AdapterLookupBase(object):
 
     def changed(self, ignored=None):
         super(AdapterLookupBase, self).changed(None)
-        for r in self._required.keys():
+        for r in list(self._required.keys()):
             r = r()
             if r is not None:
                 r.unsubscribe(self)
@@ -545,7 +545,7 @@ class AdapterLookupBase(object):
         return result
 
     def queryMultiAdapter(self, objects, provided, name=_BLANK, default=None):
-        factory = self.lookup(map(providedBy, objects), provided, name)
+        factory = self.lookup(list(map(providedBy, objects)), provided, name)
         if factory is None:
             return default
 
@@ -600,7 +600,7 @@ class AdapterLookupBase(object):
         return result
 
     def subscribers(self, objects, provided):
-        subscriptions = self.subscriptions(map(providedBy, objects), provided)
+        subscriptions = self.subscriptions(list(map(providedBy, objects)), provided)
         if provided is None:
             result = ()
             for subscription in subscriptions:
@@ -649,7 +649,7 @@ class AdapterRegistry(BaseAdapterRegistry):
     def changed(self, originally_changed):
         super(AdapterRegistry, self).changed(originally_changed)
 
-        for sub in self._v_subregistries.keys():
+        for sub in list(self._v_subregistries.keys()):
             sub.changed(originally_changed)
 
 
