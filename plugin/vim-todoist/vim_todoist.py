@@ -7,7 +7,7 @@ def get_tasks():
         print("===== Tasks To Do =====")
 
         for task in sync['items']:
-            print "-> {}".format(task['content'].encode('utf-8'))
+            print("-> {}".format(task['content'].encode('utf-8')))
 
         print("=======================")
 
@@ -20,7 +20,7 @@ def get_completed_tasks():
 
         print("===== Completed Tasks =====")
         for task in tasks['items']:
-            print "[{}] -> {}".format(task['completed_date'], task['content'].encode('utf-8'))
+            print("[{}] -> {}".format(task['completed_date'], task['content'].encode('utf-8')))
 
         print("===========================")
 
@@ -32,7 +32,7 @@ def get_projects():
         print("===== My Projects =====")
 
         for project in sync['projects']:
-            print "-> {}".format(project['name'])
+            print("-> {}".format(project['name']))
 
         print("=======================")
 
@@ -43,7 +43,7 @@ def get_api():
         token = vim.eval('g:todoist_token')
         return todoist.TodoistAPI(token)
     else:
-        print "To use vim-todoist, you must type your Token API in .vimrc. Please type: let g:todoist_token = 'YOUR_TOKEN'"
+        print("To use vim-todoist, you must type your Token API in .vimrc. Please type: let g:todoist_token = 'YOUR_TOKEN'")
         return 0
 
 def get_sync():
