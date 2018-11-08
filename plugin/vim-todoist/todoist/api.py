@@ -24,7 +24,7 @@ class SyncError(Exception):
     pass
 
 
-class TodoistAPI(object):
+class TodoistAPI:
     """
     Implements the API that makes it possible to interact with a Todoist user
     account and its data.
